@@ -13,12 +13,12 @@
             background-size: cover;
             display: block;
             margin: auto;
-            
+
         }
     </style>
 
 <body>
-    <canvas id="canvas" width="520" height="660"></canvas>
+    <canvas id="canvas" width="420" height="540"></canvas>
     <script>
         var canvas = document.getElementById('canvas');
         ctx = canvas.getContext('2d');
@@ -28,12 +28,20 @@
         var yspeed = 0;
         var com_score = 0;
         var player_score = 0;
-        var x_min = 30;
-        var x_max = 460;
+        var x_min = 20;
+        var x_max = 380;
         var y_min = 30;
-        var y_max = 600;
+        var y_max = 480;
 
-        document.addEventListener("mousemove", mouseMoveHandler, false);
+        // Detección de pantalla táctil
+        const isTouchDevice = 'ontouchstart' in document.documentElement;
+        if (isTouchDevice) {
+            // Si es un dispositivo táctil, usar eventos táctiles
+            document.addEventListener("touchmove", handleMouseMoveOrTouch, false);
+        } else {
+            // Si no es un dispositivo táctil, usar eventos de mouse
+            document.addEventListener("mousemove", handleMouseMoveOrTouch, false);
+        }
 
 
         function draw_rect(x, y, w, h, b) {
@@ -96,40 +104,40 @@
         }
 
         function draw_board() {
-            draw_rect(0, 0, 520, 660, 1);
-            draw_rect(30, 30, 460, 600, 0);
-            draw_goal(260, 30, 70, 1);
-            draw_goal(260, 30, 150, 1);
-            draw_goal(260, 630, 70, 0);
-            draw_goal(260, 630, 150, 0);
-            draw_circle(260, 330, 40, 4);
-            draw_circle(260, 330, 5, 4);
+            draw_rect(0, 0, 420, 560, 1);
+            draw_rect(30, 30, 360, 500, 0);
+            draw_goal(208, 30, 70, 1);
+            draw_goal(208, 30, 150, 1);
+            draw_goal(208, 530, 70, 0);
+            draw_goal(208, 530, 150, 0);
+            draw_circle(208, 290, 40, 4);
+            draw_circle(208, 290, 5, 4);
 
             ctx.beginPath();
-            ctx.moveTo(30, 330);
-            ctx.lineTo(490, 330);
+            ctx.moveTo(20, 290);
+            ctx.lineTo(400, 290);
             ctx.stroke();
             ctx.closePath();
 
             ctx.beginPath();
-            ctx.moveTo(190, 30);
-            ctx.lineTo(330, 30);
+            ctx.moveTo(120, 30);
+            ctx.lineTo(300, 30);
             ctx.lineWidth = 4;
             ctx.strokeStyle = "#000";
             ctx.stroke();
             ctx.closePath();
 
             ctx.beginPath();
-            ctx.moveTo(190, 630);
-            ctx.lineTo(330, 630);
-            //ctx.strokeStyle("#FFFFFF");
+            ctx.moveTo(120, 630);
+            ctx.lineTo(300, 630);
+            // ctx.strokeStyle("#FFFFFF");
             ctx.stroke();
             ctx.closePath();
 
             ctx.font = "50px Pristina";
             ctx.lineWidth = 2
-            ctx.strokeText(com_score, 440, 300);
-            ctx.strokeText(player_score, 440, 380);
+            ctx.strokeText(com_score, 360, 280);
+            ctx.strokeText(player_score, 360, 340);
         }
 
         function distance(x1, y1, x2, y2) {
@@ -148,9 +156,9 @@
             this.radius = r;
         }
         // Player's object
-        var pMallet = new Mallet(260, canvas.height - 100, 30);
+        var pMallet = new Mallet(360, canvas.height - 100, 30);
 
-        var cMallet = new Mallet(260, 100, 30);
+        var cMallet = new Mallet(360, 100, 30);
 
         // Ball class
         var Ball = function (x, y, r) {
@@ -177,6 +185,25 @@
         }
 
 
+        // Función para manejar eventos de mouse o táctiles
+        function handleMouseMoveOrTouch(event) {
+
+            var relativeX = e.clientX - canvas.offsetLeft;
+            var relativeY = e.clientY - canvas.offsetTop;
+
+            if (relativeX > 60 && relativeX < canvas.width - 60) {
+                pMallet.x = relativeX;
+            }
+            //360
+            if (relativeY > 0 && relativeY < 600) {
+                pMallet.y = relativeY;
+            }
+
+        }
+
+
+
+
         function play() {
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -195,7 +222,7 @@
             }
 
             // condition to bounce the ball off the top-botom walls and goal logic
-            if (ball.x > 190 && ball.x < 330) {
+            if (ball.x > 180 && ball.x < 320) {
                 if (ball.y + yspeed > canvas.height + ball.radius - 30) {
                     console.log("Computer Score");
                     ball.x = canvas.width / 2;
