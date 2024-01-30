@@ -3,7 +3,6 @@
 <head>
     <title>Air Hockey</title>
     <style>
-
         body {
             background: transparent !important;
             overflow: hidden !important;
@@ -195,9 +194,14 @@
 
         // Función para manejar eventos de mouse o táctiles
         function handleMouseMoveOrTouch(e) {
-
-            var relativeX = e.clientX - canvas.offsetLeft;
-            var relativeY = e.clientY - canvas.offsetTop;
+            var relativeX, relativeY;
+            if (e.type === "touchmove") {
+                relativeX = e.touches[0].clientX - canvas.offsetLeft;
+                relativeY = e.touches[0].clientY - canvas.offsetTop;
+            } else {
+                relativeX = e.clientX - canvas.offsetLeft;
+                relativeY = e.clientY - canvas.offsetTop;
+            }
 
             if (relativeX > 60 && relativeX < canvas.width - 60) {
                 pMallet.x = relativeX;
@@ -206,7 +210,6 @@
             if (relativeY > 0 && relativeY < 600) {
                 pMallet.y = relativeY;
             }
-
         }
 
 
